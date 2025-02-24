@@ -3,6 +3,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 // import pool from "./config/db.js"
 import userRouter from "./routes/userRoutes.js"
+import jobRouter from "./routes/jobRoutes.js"
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ app.get("/", async (req, res) => {
     // res.send(`Current database is ${result.rows[0].current_database}`)
 })
 app.use("/api/users", userRouter)
+app.use("/api/jobs", jobRouter)
 
 
 // Error Handling

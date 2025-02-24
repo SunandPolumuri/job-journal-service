@@ -9,8 +9,7 @@ export const getAllUsers = async (req, res, next) => {
             res.json({
                 users: users.rows
             })
-        }
-        else {
+        } else {
             throw new Error("No users found!!!")
         }
     } catch (err) {
@@ -35,9 +34,8 @@ export const createUser = async (req, res, next) => {
             res.json({
                 user: insertUser.rows[0]
             })
-        }
-        else {
-            throw new Error('Unable to insert user')
+        } else {
+            throw new Error("Unable to insert user")
         }
     } catch (err) {
         next(err)
@@ -52,7 +50,7 @@ export const login = async (req, res, next) => {
         const checkUserQuery = "SELECT * FROM users WHERE email=$1"
         const user = await pool.query(checkUserQuery, [email])
         if(user.rows.length === 0) {
-            return res.status(404).json({message: "User not found"})
+            return res.status(400).json({message: "User not found"})
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.rows[0].password)
