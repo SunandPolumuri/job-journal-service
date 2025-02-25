@@ -1,5 +1,6 @@
 import pool from "../config/db.js"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
 export const getAllUsers = async (req, res, next) => {
     try {
@@ -57,7 +58,18 @@ export const login = async (req, res, next) => {
         if(!isPasswordValid) {
             return res.status(401).json({message: "Incorrect password"})
         }
-        res.json({
+
+        const userDetails = {
+            user_id: user.rows[0].user_id,
+            email: user.rows[0].email
+        }
+        const token = jwt.sign(userDetails, process.env.JWT_SECRET_KEY, { expiresIn: "1h" })
+        res.cookie(
+            "JWT-Token", token, {
+                httpOnly: true,
+                sameSite: "Strict"
+            }
+        ).json({
             user_id: user.rows[0].user_id,
             name: user.rows[0].name,
             email: user.rows[0].email
