@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
 // import pool from "./config/db.js"
 import userRouter from "./routes/userRoutes.js"
 import jobRouter from "./routes/jobRoutes.js"
@@ -13,6 +14,7 @@ const port = process.env.PORT || 3001
 // Middlewares
 
 app.use(cors())
+app.use(cookieParser())
 app.use(express.json())
 
 
