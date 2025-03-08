@@ -43,7 +43,7 @@ export const createUser = async (req, res, next) => {
                 message: "User already exists!"
             })
         }
-          
+
         const insertUserQuery = "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING user_id, name, email"
         const passwordHash = await bcrypt.hash(password, 10)
         const insertUser = await pool.query(insertUserQuery, [name, email, passwordHash])
@@ -88,6 +88,7 @@ export const login = async (req, res, next) => {
         }
 
         const userDetails = {
+            name: user.rows[0].name,
             user_id: user.rows[0].user_id,
             email: user.rows[0].email
         }
@@ -95,9 +96,11 @@ export const login = async (req, res, next) => {
         res.cookie(
             "JWT-Token", token, {
                 httpOnly: true,
-                sameSite: "Strict"
+                // sameSite: "Strict",
+                expires: new Date(Date.now() + (60 * 60 * 1000))
             }
-        ).json({
+        )
+        res.json({
             user_id: user.rows[0].user_id,
             name: user.rows[0].name,
             email: user.rows[0].email
@@ -107,9 +110,21 @@ export const login = async (req, res, next) => {
     }
 }
 
+export const getUser = async (req, res, next) => {
+    try {
+        const { user } = req
+        res.status(200).json({
+            message: "User fetched successfully",
+            user: user
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 export const logout = async (req, res, next) => {
     try {
-        res.clearCookie("JWT-Token").send("Successfully logged out!")
+        res.clearCookie("JWT-Token").json({message: "Successfully logged out!"})
     } catch (err) {
         next(err)
     }
