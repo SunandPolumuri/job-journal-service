@@ -76,10 +76,10 @@ export const updateJob = async (req, res, next) => {
             company_name: Joi.string(),
             job_role: Joi.string(),
             status: Joi.string(),
-            job_platform: Joi.string(),
-            job_link: Joi.string().uri(),
-            job_location: Joi.string(),
-            job_details: Joi.object()
+            job_platform: Joi.string().allow(null),
+            job_link: Joi.string().uri().allow(null),
+            job_location: Joi.string().allow(null),
+            job_details: Joi.object().allow(null)
         })
 
         if(jobIdError) {
